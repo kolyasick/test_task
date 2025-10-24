@@ -117,17 +117,22 @@ watch(
   <div class="wrapper">
     <Header @handle-add-row="handleAddRow" />
 
-    <form @submit.prevent="handleSubmit" class="form">
-      <div class="form-row" v-for="(row, index) in rows" :key="index">
+    <form v-if="rows.length" @submit.prevent="handleSubmit" class="form">
+      <div class="form-row__grid">
+        <span class="input-title">Метки</span>
+        <span class="input-title">Тип записи</span>
+        <span class="input-title">Логин</span>
+        <span class="input-title">Пароль</span>
+      </div>
+
+      <div v-for="(row, index) in rows" :key="index" class="form-row">
         <div class="form-row__grid">
           <label class="input-wrapper" :class="{ error: row.errors.mark }">
-            <span class="input-title">Метки</span>
             <input @input="onMarkInput($event, row)" type="text" />
             <p v-if="row.errors.mark" class="error-text">{{ row.errors.mark }}</p>
           </label>
 
           <label class="input-wrapper" :class="{ error: row.errors.type }">
-            <span class="input-title">Тип записи</span>
             <select @change="onTypeChange(row.type, index)" v-model="row.type">
               <option :value="null">Выберите тип</option>
               <option v-for="type in types" :key="type" :value="type">{{ type }}</option>
@@ -136,7 +141,6 @@ watch(
           </label>
 
           <label class="input-wrapper" :class="{ error: row.errors.login, expanded: row.type === 'LDAP' }">
-            <span class="input-title">Логин</span>
             <input
               @blur="validateField('login', row.login, index)"
               @input="validateInputLength($event, 100)"
@@ -149,7 +153,6 @@ watch(
           </label>
 
           <label v-if="row.type !== 'LDAP'" class="input-wrapper password-wrapper" :class="{ error: row.errors.password }">
-            <span class="input-title">Пароль</span>
             <div class="password-input-container">
               <input
                 @blur="validateField('password', row.password!, index)"
@@ -197,6 +200,7 @@ watch(
     display: flex;
     gap: 12px;
     align-items: end;
+    position: relative;
 
     &__grid {
       display: grid;
@@ -212,6 +216,9 @@ watch(
       background: none;
       border: none;
       cursor: pointer;
+      position: absolute;
+      right: -35px;
+      top: 6px;
 
       &-icon {
         width: 24px;
@@ -262,6 +269,7 @@ watch(
       font-size: 12px;
       margin-top: 4px;
       min-height: 16px;
+      line-height: 100%;
     }
 
     &.password-wrapper {
