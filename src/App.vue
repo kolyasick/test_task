@@ -14,8 +14,20 @@ const store = useAccountStore();
 const types = ref(["LDAP", "Локальная"]);
 
 const showPassword = ref<boolean[]>([]);
+const initalRow = {
+  errors: {
+    login: null,
+    mark: null,
+    password: null,
+    type: null,
+  },
+  login: "",
+  mark: [],
+  password: "",
+  type: null,
+};
 
-const rows = ref<Row[]>([]);
+const rows = ref<Row[]>([initalRow]);
 
 const handleAddRow = () => {
   rows.value.push({
@@ -96,7 +108,7 @@ const handleSubmit = () => {
 
   rows.value = rows.value.map((r) => {
     delete r.errors;
-    
+
     return {
       ...r,
       password: r.type === "LDAP" ? null : r.password,
@@ -104,7 +116,7 @@ const handleSubmit = () => {
   });
 
   store.addAccounts(rows.value);
-  rows.value = [];
+  rows.value = [initalRow];
 };
 
 watch(
