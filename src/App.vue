@@ -8,12 +8,12 @@ import AccountList from "./components/AccountList.vue";
 import Eye from "./components/icons/Eye.vue";
 import ClosedEye from "./components/icons/ClosedEye.vue";
 
+type Row = AccountForm & { errors: Record<keyof AccountForm, string | null> };
+
 const store = useAccountStore();
 const types = ref(["LDAP", "Локальная"]);
 
 const showPassword = ref<boolean[]>([]);
-
-type Row = AccountForm & { errors: Record<keyof AccountForm, string | null> };
 
 const rows = ref<Row[]>([]);
 

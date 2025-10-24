@@ -9,7 +9,7 @@ defineEmits<{
 
 <template>
   <div class="header">
-    <div class="header-container">
+    <div class="header__container">
       <h1 class="header__title">Учетные записи</h1>
       <button @click="$emit('handleAddRow')" class="header__button">
         <Plus class="header__button-icon" />
@@ -26,7 +26,8 @@ defineEmits<{
 <style scoped lang="scss">
 .header {
   width: 100%;
-  .header-container {
+  
+  &__container {
     display: flex;
     align-items: center;
     column-gap: 14px;
