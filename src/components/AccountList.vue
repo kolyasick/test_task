@@ -15,7 +15,9 @@ const store = useAccountStore();
           <p class="account-card__password">Пароль: {{ account.password || "Не установлен" }}</p>
           <div v-if="account.mark.length" class="account-card__marks">
             Метки:
-            <p v-for="(mark, index) in account.mark" :key="index">{{ mark.text }},</p>
+            <p v-for="(mark, index) in account.mark" :key="index">
+                {{ mark.text }} {{ index + 1 === account.mark.length ? "" : "," }}
+            </p>
           </div>
         </div>
       </li>

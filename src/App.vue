@@ -123,7 +123,7 @@ watch(
           <label class="input-wrapper" :class="{ error: row.errors.mark }">
             <span class="input-title">Метки</span>
             <input @input="onMarkInput($event, row)" type="text" />
-            <p class="error-text">{{ row.errors.mark }}</p>
+            <p v-if="row.errors.mark" class="error-text">{{ row.errors.mark }}</p>
           </label>
 
           <label class="input-wrapper" :class="{ error: row.errors.type }">
@@ -132,7 +132,7 @@ watch(
               <option :value="null">Выберите тип</option>
               <option v-for="type in types" :key="type" :value="type">{{ type }}</option>
             </select>
-            <p class="error-text">{{ row.errors.type }}</p>
+            <p v-if="row.errors.type" class="error-text">{{ row.errors.type }}</p>
           </label>
 
           <label class="input-wrapper" :class="{ error: row.errors.login, expanded: row.type === 'LDAP' }">
@@ -145,7 +145,7 @@ watch(
               required
               type="text"
             />
-            <p class="error-text">{{ row.errors.login }}</p>
+            <p v-if="row.errors.login" class="error-text">{{ row.errors.login }}</p>
           </label>
 
           <label v-if="row.type !== 'LDAP'" class="input-wrapper password-wrapper" :class="{ error: row.errors.password }">
@@ -165,7 +165,7 @@ watch(
                 <Eye v-else class="eye-icon" />
               </button>
             </div>
-            <p class="error-text">{{ row.errors.password }}</p>
+            <p v-if="row.errors.password" class="error-text">{{ row.errors.password }}</p>
           </label>
         </div>
         <button type="button" @click="handleDeleteRow(index)" class="form-row__button">
