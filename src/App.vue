@@ -8,7 +8,7 @@ import AccountList from "./components/AccountList.vue";
 import Eye from "./components/icons/Eye.vue";
 import ClosedEye from "./components/icons/ClosedEye.vue";
 
-type Row = AccountForm & { errors: Record<keyof AccountForm, string | null> };
+type Row = AccountForm & { errors?: Record<keyof AccountForm, string | null> };
 
 const store = useAccountStore();
 const types = ref(["LDAP", "Локальная"]);
@@ -66,9 +66,9 @@ const validateField = (field: keyof AccountForm, value: string, rowId: number) =
   if (!row) return;
 
   if (!value.trim()) {
-    row.errors[field as keyof AccountForm] = "Поле обязательно для заполнения";
+    row.errors![field as keyof AccountForm] = "Поле обязательно для заполнения";
   } else {
-    row.errors[field as keyof AccountForm] = null;
+    row.errors![field as keyof AccountForm] = null;
   }
 };
 
@@ -82,9 +82,9 @@ const onTypeChange = (type: string | null, rowId: number) => {
   if (!row) return;
 
   if (!type) {
-    row.errors.type = "Поле обязательно для заполнения";
+    row.errors!.type = "Поле обязательно для заполнения";
   } else {
-    row.errors.type = null;
+    row.errors!.type = null;
   }
 };
 
@@ -95,6 +95,8 @@ const handleSubmit = () => {
   }
 
   rows.value = rows.value.map((r) => {
+    delete r.errors;
+    
     return {
       ...r,
       password: r.type === "LDAP" ? null : r.password,
@@ -127,20 +129,20 @@ watch(
 
       <div v-for="(row, index) in rows" :key="index" class="form-row">
         <div class="form-row__grid">
-          <label class="input-wrapper" :class="{ error: row.errors.mark }">
+          <label class="input-wrapper" :class="{ error: row.errors?.mark }">
             <input @input="onMarkInput($event, row)" type="text" />
-            <p v-if="row.errors.mark" class="error-text">{{ row.errors.mark }}</p>
+            <p v-if="row.errors?.mark" class="error-text">{{ row.errors.mark }}</p>
           </label>
 
-          <label class="input-wrapper" :class="{ error: row.errors.type }">
+          <label class="input-wrapper" :class="{ error: row.errors?.type }">
             <select @change="onTypeChange(row.type, index)" v-model="row.type">
               <option :value="null">Выберите тип</option>
               <option v-for="type in types" :key="type" :value="type">{{ type }}</option>
             </select>
-            <p v-if="row.errors.type" class="error-text">{{ row.errors.type }}</p>
+            <p v-if="row.errors?.type" class="error-text">{{ row.errors?.type }}</p>
           </label>
 
-          <label class="input-wrapper" :class="{ error: row.errors.login, expanded: row.type === 'LDAP' }">
+          <label class="input-wrapper" :class="{ error: row.errors?.login, expanded: row.type === 'LDAP' }">
             <input
               @blur="validateField('login', row.login, index)"
               @input="validateInputLength($event, 100)"
@@ -149,10 +151,10 @@ watch(
               required
               type="text"
             />
-            <p v-if="row.errors.login" class="error-text">{{ row.errors.login }}</p>
+            <p v-if="row.errors?.login" class="error-text">{{ row.errors?.login }}</p>
           </label>
 
-          <label v-if="row.type !== 'LDAP'" class="input-wrapper password-wrapper" :class="{ error: row.errors.password }">
+          <label v-if="row.type !== 'LDAP'" class="input-wrapper password-wrapper" :class="{ error: row.errors?.password }">
             <div class="password-input-container">
               <input
                 @blur="validateField('password', row.password!, index)"
@@ -168,7 +170,7 @@ watch(
                 <Eye v-else class="eye-icon" />
               </button>
             </div>
-            <p v-if="row.errors.password" class="error-text">{{ row.errors.password }}</p>
+            <p v-if="row.errors?.password" class="error-text">{{ row.errors?.password }}</p>
           </label>
         </div>
         <button type="button" @click="handleDeleteRow(index)" class="form-row__button">
